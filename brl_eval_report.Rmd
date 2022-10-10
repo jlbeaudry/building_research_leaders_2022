@@ -1,0 +1,145 @@
+---
+title: "Building Research Leaders for Early Career Researchers"
+subtitle: "Evaluation (October 2022)"
+# author: "Jen Beaudry"
+# date: "2022-10-10"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+header-includes:
+    - \usepackage{caption}
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE,
+                      include = TRUE, 
+                      eval = TRUE)
+
+```
+
+```{r library, include=FALSE}
+
+library(here)
+library(tidyverse)
+library(kableExtra)
+library(RColorBrewer)
+
+```
+
+```{r functions, include=FALSE}
+
+styler_pdf <- function(dat) {
+  dat %>%
+     kable_styling(full_width = F, 
+                latex_options = c("striped", "HOLD_position"))
+}
+
+source(here("..", "functions", "meta_rename.R"))
+source(here("..", "functions", "ratings_summary.R"))
+
+```
+
+```{r load data, include=FALSE}
+
+df <- read_csv(here::here("data", "brl_eval_processed.csv"), lazy = FALSE)
+
+```
+
+```{r code factors, include=FALSE}
+
+# [breadcrumb: include the response options in the metadata]
+
+# turn all ratings variables into factors, regardless of whether they are from the mentee or mentor files
+# use datapasta to do this!
+# the code below works
+
+df$expectations <- factor(df$expections, levels = c("Yes", "Partly", "No"))
+df$`post-PhD` <- factor(df$`post-PhD`, levels = c("Less than 5 years post-PhD", 
+                                                  "5 to 10 years post-PhD", 
+                                                  "11 to 15 years post-PhD", 
+                                                  "More than 15 years post-PhD"))
+
+# work with all rating items together because they have the same levels
+
+cols <- c("research_leadership",
+  "research_productivity",
+  "expert",
+  "engaging",
+  "balance",
+  "current_role",
+  "future_roles",
+  "reengagement")
+
+
+
+# turn the cols columns into factors
+df <- df %>% 
+  mutate(across (all_of(cols), ~factor(., 
+                                       levels = c("N/A", 
+                                           "Strongly disagree",
+                                           "Somewhat disagree",
+                                           "Neither agree nor disagree",
+                                           "Somewhat agree",
+                                           "Strongly agree"))))
+
+```
+
+
+```{r sessions attendance}
+
+# [breadcrumb: how many sessions did they attend & reasons for attendance?]
+
+```
+
+We asked our attendees four questions. One was about the forum, two were about
+their training and development needs, and one was an open-ended question giving 
+them an opportunity to tell us anything else they wanted us to know. 
+
+\captionsetup[table]{labelformat=empty}
+
+## Question 1
+What would you like to see in future fora with the DVC(R)?
+
+```{r table for forum ideas}
+
+# use for complete report not report for Rob
+
+# put relevant data in a tibble
+forum_ideas <- df %>% 
+  dplyr::select(c(id,`forum ideas`)) %>% 
+  filter(!`forum ideas` == "NA") %>%  # remove the NA values
+  mutate(responses = 1:n()) %>% 
+  relocate(responses, .after = id)
+
+# get the relevant ns for the header
+total_n <- length(unique(df$id))
+resp_n <- length(unique(forum_ideas$id))
+ns <- c(resp_n, total_n) 
+
+forum_ideas <- forum_ideas %>% 
+  dplyr::select(c(id, `forum ideas`))
+
+knitr::kable (
+  forum_ideas,
+  booktabs = T,
+  linesep = "\\addlinespace",
+  col.names = c("ID", "MCR Forum Ideas"),
+  caption =
+    sprintf("Responses from %s completed surveys", paste(ns, collapse = " people from ")),
+  align = 'cl', 
+  longtable = T #break the table over multiple pages
+  ) %>%
+  column_spec(2, width = "5in") %>% 
+  kable_styling(full_width = F, 
+                latex_options = c("repeat_header", "hold_position")) 
+# use different styling to repeat the header
+
+
+```
+
+
+
+
+
+
