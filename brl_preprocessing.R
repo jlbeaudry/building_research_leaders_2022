@@ -40,6 +40,6 @@ df <- meta_rename(df = df, metadata = meta, old = old_variable, new = new_variab
 # when done preprocessing, write the data to new files
 # row.names gets rid of the first column from the dataframe.
 
-write.csv(df, here::here("data", "brl_eval_processed.csv"), row.names = FALSE)
+write.csv(df, here::here("data", "brl_eval_processed_data.csv"), row.names = FALSE)
 
 
