@@ -53,7 +53,6 @@ df <- read_csv(here::here("data", "brl_eval_processed_data.csv"), lazy = FALSE)
 
 ```{r code factors, include=FALSE}
 
-# [breadcrumb: include the response options in the metadata]
 
 # turn all ratings variables into factors, use datapasta to do this!
 # the code below works
