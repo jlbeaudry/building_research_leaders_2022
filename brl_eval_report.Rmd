@@ -93,28 +93,28 @@ df <- df %>%
   # kable for the captions within the tables. 
 
 table_nums(name = "career_stage", 
-           caption = "We asked participants to elaborate on whether they thought the workshop was appropriate for their career stage.")
+           caption = "'Please elaborate on whether this workshop was appropriate for your career stage.'")
 
 table_nums(name = "info_workshop", 
-           caption = "We asked participants what they expected from this workshop.")
+           caption = "'What did you expect from this workshop?'")
 
 table_nums(name = "expectations", 
-           caption = "We asked participants to elaborate on how the workshop aligned with their expectations.")
+           caption = "'Please elaborate on how the workshop aligned with your expectations.'")
 
 table_nums(name = "action", 
-          caption = "We asked participants to explain whether this workshop inspired them to take any immediate action(s).")
+          caption = "'Did this workshop inspire you to take any immediate action(s)?'")
 
 table_nums(name = "success",
-             caption = "We asked participants if they credited any research successes to the workshop.")
+             caption = "'Do you credit any research successes to the workshop?'")
 
 table_nums(name = "best_parts",
-             caption = "We asked participants to explain the best parts of the workshop.")
+             caption = "'What were the best parts of the workshop?'")
 
 table_nums(name = "improvement",
-             caption = "We asked participants for any suggestions for improvement.")
+             caption = "'Any suggestions for improvement?'")
 
 table_nums(name = "anything_else",
-             caption = "We asked participants if there was anything else they wanted us to know.")
+             caption = "'Anything else you want us to know?'")
 
 table_nums(name = "attendance", 
            caption = "We asked participants to explain why they attended the number of sessions that they did.")
@@ -135,12 +135,15 @@ participants <- 21
 
 ```
 
+
+Hugh Kearns from ThinkWell designed and delivered the 
+*Building Research Leaders for Early Career Researchers* workshop. The series of 
+six sessions that comprise this program are being run from April to November 2022. 
+At the time of the survey, Hugh had offered five of the six sessions. 
 Of the `r participants` participants in the workshop, `r nrow(df)` completed this evaluation.
-At the time of this evaluation, we had offered 5 of the 6 sessions that comprised
-the 2022 offering of the *Building Research Leaders for Early Career Researchers* workshop. 
+
 On average, the respondents to this survey attended `r round(mean(df$attendance),2)` 
 of the 5 sessions, ranging from `r min(df$attendance)` to `r max(df$attendance)`.
-
 Their explanations for why they attended the sessions that they did are shown in 
 `r table_nums("attendance", display = "cite")` in the Appendix. 
 
@@ -284,7 +287,6 @@ expect <- df %>%
     dplyr::group_by (expectations) %>% 
   count()
 
-
 ```
 
 ```{r careerstage table, include = TRUE}
@@ -292,9 +294,13 @@ expect <- df %>%
 # remove the post-PhD because it's repeated in every response
 df$`post-PhD` <- str_remove(df$`post-PhD`, " post-PhD")
 
+
 years <- df %>% 
     dplyr::group_by (`post-PhD`) %>% 
   count()
+
+# change the text to be used in the markdown
+years$`post-PhD` <- str_replace(years$`post-PhD`, "Less", "less")
 
 career_stage <- df %>% 
   select(c(id, `post-PhD`, careerstage_yes, careerstage_no)) %>% 
@@ -307,7 +313,7 @@ kable(
   booktabs = T, 
   align = c('clll'),
   linesep = "\\addlinespace",
-  caption = "We asked participants to elaborate on whether they thought the workshop was appropriate for their career stage.",
+  caption = "'Please elaborate on whether this workshop was appropriate for your career stage.'",
   col.names = c("Participant", "Years post PhD", "Reasons why it was appropriate", "Reasons why it was not appropriate")
   ) %>%
   column_spec (column = 3, width = "5cm") %>%
@@ -342,7 +348,7 @@ kable(
   booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants to explain what they expected from the workshop.",
+  caption = "'What did you expect from this workshop?'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
@@ -363,7 +369,7 @@ kable(
   booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants to elaborate on how the workshop aligned with their expectations.",
+  caption = "'Please elaborate on how the workshop aligned with your expectations.'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
@@ -384,7 +390,7 @@ kable(
   booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants to explain whether this workshop inspired them to take any immediate action(s).",
+  caption = "'Did this workshop inspire you to take any immediate action(s)?'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
@@ -405,7 +411,7 @@ kable(
   booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants if they credited any research successes to the workshop.",
+  caption = "'Do you credit any research successes to the workshop?'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
@@ -425,7 +431,7 @@ kable(
     booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants to explain the best parts of the workshop.",
+  caption = "'What were the best parts of the workshop?'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
@@ -447,7 +453,7 @@ kable(
     booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants to provide suggestions for improvement.",
+  caption = "'Any suggestions for improvement?'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
@@ -468,7 +474,7 @@ kable(
     booktabs = T, 
   align = c('cl'),
   linesep = "\\addlinespace",
-  caption = "We asked participants whether they had anything else they wanted us to know.",
+  caption = "'Anything else you want us to know?'",
   col.names = c("Participant", "Response")
   ) %>%
   column_spec (column = 2, width = "14cm") %>%
